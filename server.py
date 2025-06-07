@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+import json
 
 from EmotionDetection.emotion_detection import emotion_detector
 
@@ -15,17 +16,18 @@ def sent_analyzer():
     text_to_analyze = request.args.get('textToAnalyze')
 
     # Pass the text to the emotion_detection function and store the response
-    response = emotion_detection(text_to_analyze)
+    response = json.loads(emotion_detector(text_to_analyze))
 
     # Extract the label and score from the response
-    label = response['label']
-    score = response['score']
+    dominant_emotion =  response["dominant_emotion"]
+    response.pop("dominant_emotion")
 
-    # Check if the label is None, indicating an error or invalid input
-    if label is None:
-        return "Invalid input! Try again."
-    # Return a formatted string with the sentiment label and score
-    return f"The given text has been identified as {label.split('_')[1]} with a score of {score}."
+    formatted = str(response).replace('{','').replace('}','')
+
+    output_str = f"For the given statement, the system response is {formatted}. 
+        The dominant emotion is <strong>{dominant_emotion}</strong>."
+    
+    return output_str
 
 
 @app.route("/")
