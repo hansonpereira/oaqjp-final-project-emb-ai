@@ -14,6 +14,9 @@ def sent_analyzer():
     response = json.loads(emotion_detector(text_to_analyze))
     # Extract the label and score from the response
     dominant_emotion =  response["dominant_emotion"]
+    if dominant_emotion == None:
+        return "<strong>Invalid text! Please try again!.</strong>"
+
     response.pop("dominant_emotion")
 
     formatted = str(response).replace('{','').replace('}','')
