@@ -1,33 +1,24 @@
 from flask import Flask, render_template, request
 import json
-
 from EmotionDetection.emotion_detection import emotion_detector
 
 # Initiate the flask app O
 app = Flask("Emotion Detector")
 
-
 @app.route("/emotionDetector", methods=["GET"])
 def sent_analyzer():
-    """
-    Endpoint to perform emotionDetector on the provided input text.
-    """
     # Retrieve the text to analyze from the request arguments
     text_to_analyze = request.args.get('textToAnalyze')
 
     # Pass the text to the emotion_detection function and store the response
     response = json.loads(emotion_detector(text_to_analyze))
-
     # Extract the label and score from the response
     dominant_emotion =  response["dominant_emotion"]
     response.pop("dominant_emotion")
 
     formatted = str(response).replace('{','').replace('}','')
+    return f"For the given statement, the system response is {formatted}. The dominant emotion is <strong>{dominant_emotion}</strong>."
 
-    output_str = f"For the given statement, the system response is {formatted}. 
-        The dominant emotion is <strong>{dominant_emotion}</strong>."
-    
-    return output_str
 
 
 @app.route("/")
