@@ -1,5 +1,8 @@
-from flask import Flask, render_template, request
+"""
+ Sentimental Analyser
+ """
 import json
+from flask import Flask, render_template, request
 from EmotionDetection.emotion_detection import emotion_detector
 
 # Initiate the flask app O
@@ -7,20 +10,24 @@ app = Flask("Emotion Detector")
 
 @app.route("/emotionDetector", methods=["GET"])
 def sent_analyzer():
-    # Retrieve the text to analyze from the request arguments
+    """ Retrieve the text to analyze from the request arguments """
     text_to_analyze = request.args.get('textToAnalyze')
 
     # Pass the text to the emotion_detection function and store the response
     response = json.loads(emotion_detector(text_to_analyze))
     # Extract the label and score from the response
     dominant_emotion =  response["dominant_emotion"]
-    if dominant_emotion == None:
+    if dominant_emotion is None:
         return "<strong>Invalid text! Please try again!.</strong>"
 
     response.pop("dominant_emotion")
 
     formatted = str(response).replace('{','').replace('}','')
-    return f"For the given statement, the system response is {formatted}. The dominant emotion is <strong>{dominant_emotion}</strong>."
+    return (
+    f"For the given statement, the system response is {formatted}. "
+    f"The dominant emotion is <strong>{dominant_emotion}</strong>."
+)
+
 
 
 
