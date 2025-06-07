@@ -20,4 +20,5 @@ def emotion_detector(text_to_analyze):
     name = formatted_response["producerId"]["name"]
     output.update({"dominant_emotion": name})
     pretty_output = json.dumps(output, indent=4, sort_keys=False)
+
     return pretty_output
